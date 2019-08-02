@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+splay_path="/home/`whoami`/.config/.splay"
+
+if [[ "$1" == "" ]]; then
+    echo "No input !"
+elif [[ `which mpv | wc -l` == 0 ]]; then
+    echo "MPV is not Installed !, its required !"
+else
+    mkdir -p "$splay_path"
+    touch "$splay_path"/sfile.txt
+    touch "$splay_path"/sconf.txt
+    echo -n "" > "$splay_path"/sconf.txt
+    echo -n "$1" > "$splay_path"/sfile.txt
+    a=`which play`
+    b=`readlink "$a"`
+    c="${b%/*}"
+    python "$c"/splayer.py
+fi
+
+exit 0
