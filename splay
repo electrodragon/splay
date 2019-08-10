@@ -1,0 +1,74 @@
+#!/usr/bin/python
+import os, sys, subprocess
+
+def help_msg():
+    s = '\n   Search and Play ( splay )\n'
+    s += "\n:: Usage:\n   splay [options] <SearchTerms...>\n"
+    s += "\n:: Options:\n"
+    s += "   --dir=\'path\'| Seaches in given Directory\n"
+    s += "   --no-video  | Plays Media as Audio Only !\n"
+    s += "   --help      | Shows This Help Screen\n"
+    s += "\n:: Examples: \n"
+    s += "   $ splay \'term1\' \'term2\' \'termN\'\n"
+    s += "   $ splay --no-audio \'term1\' \'term2\' \'termN\'\n"
+    s += "   $ splay --dir=\'~/My Songs\' --dir=~/Music --no-video friends\n"
+    return s
+
+def get_working_dir():
+    __un__ = subprocess.run(['whoami'], stdout=subprocess.PIPE).stdout.decode('utf-8').replace('\n','')
+    _pwd_ = subprocess.run(['pwd'], stdout=subprocess.PIPE).stdout.decode('utf-8').replace('\n','')
+    __dirs__ = []
+    temp = None
+    for arg in args:
+        if '--dir=' in arg:
+            __dir__ = arg.split('=')[1]
+            if __dir__[0:2] == './': temp = _pwd_+'/'+__dir__[2:]
+            elif __dir__[0:2] == '~/': temp = '/home/'+__un__+'/'+__dir__[2:]
+            else: temp = __dir__
+            if temp not in __dirs__: __dirs__.append(temp)
+    if len(__dirs__) == 0: __dirs__.append(_pwd_)
+    else:
+        for d in __dirs__:
+            if os.path.isdir(d) == False: return False
+    return __dirs__
+
+args = sys.argv[1:]
+new_args = []
+novideo = False
+gethelp = False
+files = []
+s_dirs = get_working_dir()
+
+for arg in args:
+    if arg == '--no-video': novideo = True
+    elif arg == '--help': gethelp = True
+    else:
+        if '--dir=' not in arg:
+            if arg not in new_args: new_args.append(arg)
+
+
+if len(new_args) == 0 or gethelp == True:
+    sys.exit(help_msg())
+elif s_dirs == False:
+    sys.exit("\n :: Directory Doesn't Exist !\n")
+else:
+    for sd in s_dirs:
+        for r,d,f in os.walk(sd):
+            for a in f: files.append(os.path.join(r,a))
+    if len(files) == 0:
+        sys.exit("\n :: Empty Directory !\n")
+    else:
+        file_cmd = ''
+        c = 1
+        for f in files:
+            name = f.split('/')[-1]
+            for arg in new_args:
+                if arg.lower() in name.lower():
+                    file_cmd += '\''+f+'\' '
+                    print(':: {}. {}'.format(c,name))
+                    c += 1
+        print('')
+        if file_cmd == '': sys.exit(" :: No Match !\n ")
+        os.system('mpv --no-video '+file_cmd) if novideo == True else os.system('mpv '+file_cmd)
+
+# quit()
