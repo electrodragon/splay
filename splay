@@ -5,9 +5,9 @@ def help_msg():
     s = '\n   Search and Play ( splay )\n'
     s += "\n:: Usage:\n   splay [options] <SearchTerms...>\n"
     s += "\n:: Options:\n"
-    s += "   --dir=\'path\'| Seaches in given Directory\n"
-    s += "   --no-video  | Plays Media as Audio Only !\n"
-    s += "   --help      | Shows This Help Screen\n"
+    s += "   --dir=\'path\' | Searches in given Directory\n"
+    s += "   --no-video   | Plays Media as Audio Only !\n"
+    s += "   --help       | Shows This Help Screen\n"
     s += "\n:: Examples: \n"
     s += "   $ splay \'term1\' \'term2\' \'termN\'\n"
     s += "   $ splay --no-audio \'term1\' \'term2\' \'termN\'\n"
