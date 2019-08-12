@@ -50,7 +50,7 @@ for arg in args:
 if len(new_args) == 0 or gethelp == True:
     sys.exit(help_msg())
 elif s_dirs == False:
-    sys.exit("\n :: Directory Doesn't Exist !\n")
+    sys.exit("\n :: Directory Doesn\'t Exist !\n")
 else:
     for sd in s_dirs:
         for r,d,f in os.walk(sd):
@@ -64,6 +64,7 @@ else:
             name = f.split('/')[-1]
             for arg in new_args:
                 if arg.lower() in name.lower():
+                    f = f.replace("\'","\'\\\'\'")
                     file_cmd += '\''+f+'\' '
                     print(':: {}. {}'.format(c,name))
                     c += 1
