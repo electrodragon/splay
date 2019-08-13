@@ -42,11 +42,50 @@ def shuffler(files):
         if filename not in new_files: new_files.append(filename)
     return new_files
 
+def grandSearchResult(f,arg):
+    def word_maker(wordSpl):
+        words = []
+        words.append(''.join(wordSpl))
+        for i in range(0, len(wordSpl)):
+            st = ''
+            if i > 0: st+= ''.join(wordSpl[:i])
+            st+=wordSpl[i]+wordSpl[i]+''.join(wordSpl[i+1:])
+            words.append(st)
+        return words
+
+    words = []
+    arg = arg.split()
+    args = []
+    for a in arg:
+        wordSpl = []
+        for i in range(0, len(a)):
+            if a[i] not in wordSpl: wordSpl.append(a[i])
+        args.append(wordSpl)
+    for a in args:
+        maker_words = word_maker(a)
+        words.append(maker_words)
+
+    counter = list(range(0,len(args)))
+    for i in range(0,len(counter)): counter[i] = 0
+    t = 0
+    for block in words:
+        for b in block:
+            if b.lower() in f.lower():
+                counter[t] += 1
+        t += 1
+
+    verify = []
+    for count in counter:
+        if count == 0:
+            verify.append(False)
+    return False if False in verify else True
+
 args = sys.argv[1:]
 new_args = []
 shuffle = False
 novideo = False
 gethelp = False
+grandSearch = False
 files = []
 s_dirs = get_working_dir()
 
@@ -54,6 +93,7 @@ for arg in args:
     if arg == '--no-video': novideo = True
     elif arg == '--help': gethelp = True
     elif arg == '--shuffle': shuffle = True
+    elif arg == '--gs': grandSearch = True
     else:
         if '--dir=' not in arg:
             if arg not in new_args: new_args.append(arg)
@@ -76,11 +116,18 @@ else:
         for f in files:
             name = f.split('/')[-1]
             for arg in new_args:
-                if arg.lower() in name.lower():
-                    f = f.replace("\'","\'\\\'\'")
-                    file_cmd += '\''+f+'\' '
-                    print(':: {}. {}'.format(c,name))
-                    c += 1
+                if grandSearch == True:
+                    if grandSearchResult(f,arg) == True:
+                        f = f.replace("\'","\'\\\'\'")
+                        file_cmd += '\''+f+'\' '
+                        print(':: {}. {}'.format(c,name))
+                        c += 1
+                else:
+                    if arg.lower() in name.lower():
+                        f = f.replace("\'","\'\\\'\'")
+                        file_cmd += '\''+f+'\' '
+                        print(':: {}. {}'.format(c,name))
+                        c += 1
         print('')
         if file_cmd == '': sys.exit(" :: No Match !\n ")
         os.system('mpv --no-video '+file_cmd) if novideo == True else os.system('mpv '+file_cmd)
