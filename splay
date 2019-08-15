@@ -90,11 +90,10 @@ def grandSearchResult(f,arg):
 
 def found_files(files):
     ff = []
-    grandSearch = True if '--gs' in sys.argv[1:] else False
     for f in files:
         name = f.split('/')[-1]
         for arg in search_args():
-            if grandSearch == True:
+            if '--gs' in sys.argv[1:]:
                 if grandSearchResult(name,arg) == True:
                     if f not in ff: ff.append(f)
             else:
