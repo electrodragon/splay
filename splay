@@ -86,11 +86,7 @@ def grandSearchResult(f,arg):
                 counter[t] += 1
         t += 1
 
-    verify = []
-    for count in counter:
-        if count == 0:
-            verify.append(False)
-    return False if False in verify else True
+    return False if 0 in counter else True
 
 def found_files(files):
     ff = []
