@@ -34,15 +34,6 @@ def get_working_dir(args=sys.argv[1:]):
             if os.path.isdir(d) == False: return False
     return __dirs__
 
-def shuffler(files):
-    new_files = []
-    length = len(files)
-    length -= 1
-    while len(new_files) != len(files):
-        randomNumber = random.randint(0,length)
-        if files[randomNumber] not in new_files: new_files.append(files[randomNumber])
-    return new_files
-
 def all_files_in_dirs():
     files = []
     s_dirs = get_working_dir()
@@ -130,6 +121,7 @@ if get_working_dir() == False: sys.exit("\n :: Directory Doesn\'t Exist !\n")
 if len(all_files_in_dirs()) == 0: sys.exit("\n :: Empty Directory !\n")
 if len(search_args()) == 0: sys.exit("\n :: No Search Terms Specified !\n")
 shuffle = True if '--shuffle' in sys.argv[1:] else False
-files = all_files_in_dirs() if shuffle == False else shuffler(all_files_in_dirs())
+files = all_files_in_dirs()
+if shuffle: random.shuffle(files)
 if len(found_files(files)) == 0: sys.exit("\n :: No Match Found !\n ")
 os.system('mpv --no-video '+create_filecmd(found_files(files))) if '--no-video' in sys.argv[1:] else os.system('mpv '+create_filecmd(found_files(files)))
