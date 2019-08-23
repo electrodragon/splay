@@ -106,7 +106,7 @@ def create_filecmd(ff):
     cmd = ''
     for f in ff:
         cmd += '\''+f+'\' '
-        print(':: {}. {}'.format(c,f.split('/')[-1]))
+        print(':: {}. {}'.format(c,f.split('/')[-1].replace('\'\\\'\'','\'')))
         c += 1
     print('')
     return cmd
