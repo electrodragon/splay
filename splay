@@ -114,7 +114,7 @@ def create_filecmd(ff):
 if '--help' in sys.argv[1:]: sys.exit(help_msg())
 if get_working_dir() == False: sys.exit("\n :: Directory Doesn\'t Exist !\n")
 if len(all_files_in_dirs()) == 0: sys.exit("\n :: Empty Directory !\n")
-if len(search_args()) == 0: sys.exit("\n :: No Search Terms Specified !\n")
+if len(search_args()) == 0 or len(sys.argv[1:]) == 0: sys.exit("\n :: No Search Terms Specified !\n")
 files = all_files_in_dirs()
 if '--shuffle' in sys.argv[1:]: random.shuffle(files)
 if len(found_files(files)) == 0: sys.exit("\n :: No Match Found !\n ")
